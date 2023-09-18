@@ -5,5 +5,5 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.SunnyWeacher" parent="Base.Theme.SunnyWeacher" />
+    <style name="Theme.SunnyWeacher" parent="Theme.AppCompat.Light.NoActionBar" />
 </resources>
