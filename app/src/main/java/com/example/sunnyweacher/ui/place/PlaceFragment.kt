@@ -1,8 +1,10 @@
 package com.example.sunnyweacher.ui.place
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sunnyweacher.R
 import com.example.sunnyweacher.databinding.FragmentPlaceBinding
 import com.example.sunnyweacher.logic.model.Place
+import com.example.sunnyweacher.ui.weacher.WeatherActivity
 
 class PlaceFragment : Fragment() {
     val viewModel by lazy { ViewModelProviders.of(this).get(PlaceViewModel::class.java) }
@@ -31,12 +34,24 @@ class PlaceFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        if (viewModel.isPlaceSaved()){
+            val place=viewModel.getSavedPlace()
+            val intent= Intent(context,WeatherActivity::class.java).apply {
+                putExtra("location_lng",place.location.lng)
+                putExtra("location_lat",place.location.lat)
+                putExtra("place_name",place.name)
+            }
+            startActivity(intent)
+            activity?.finish()
+            return
+        }
         val layoutManager = LinearLayoutManager(activity)
         binding.recyclerView.layoutManager = layoutManager
         adapter = PlaceAdapter(this, viewModel.placeList)
         binding.recyclerView.adapter = adapter
         binding.searchPlaceEdit.addTextChangedListener { editable ->
             val content = editable.toString()
+            Log.d("TextChangedListener", "Text changed: $content")
             if (content.isNotEmpty()) {
                 viewModel.searchPlaces(content)
             } else {
